@@ -35,8 +35,8 @@ pipeline {
                     // Read the config file content
                     env.CONFIG_CONTENT = sh(script: "cat ${CONFIG_DIR}/${params.CONFIG_FILE}", returnStdout: true).trim()
                     
-                    // Extract version from the config file
-                    env.CONFIG_VERSION = sh(script: "jq -r '.version' ${CONFIG_DIR}/${params.CONFIG_FILE}", returnStdout: true).trim()
+                    // Default to version 1
+                    env.CONFIG_VERSION = 1                    
                 }
             }
         }
