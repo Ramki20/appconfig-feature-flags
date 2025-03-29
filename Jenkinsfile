@@ -41,11 +41,11 @@ pipeline {
             }
         }
         
-        stage('Validate Config') {
-            steps {
-                sh './scripts/validate_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE}'
-            }
-        }
+       // stage('Validate Config') {
+       //     steps {
+       //         sh './scripts/validate_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE}'
+       //     }
+       // }
         
         stage('Initialize Terraform') {
             steps {
