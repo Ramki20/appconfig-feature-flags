@@ -1,8 +1,14 @@
 pipeline {
     agent any
     
+    tools {
+        terraform 'Terraform' // Use the name configured in Global Tool Configuration
+    }
+    
     environment {
-        AWS_REGION = 'us-east-1'
+        AWS_ACCESS_KEY_ID     = credentials('aws-access-key-id')
+        AWS_SECRET_ACCESS_KEY = credentials('aws-secret-access-key')
+        AWS_DEFAULT_REGION    = 'us-east-1'
         CONFIG_DIR = 'config'
     }
     
@@ -100,7 +106,7 @@ pipeline {
                             --application-id ${applicationId} \
                             --environment-id ${environmentId} \
                             --deployment-number ${deploymentId} \
-                            --region ${AWS_REGION} \
+                            --region ${AWS_DEFAULT_REGION} \
                             --query "DeploymentState" \
                             --output text)
                         
