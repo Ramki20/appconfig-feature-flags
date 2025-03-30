@@ -52,7 +52,7 @@ resource "aws_appconfig_hosted_configuration_version" "feature_flags_version" {
   description              = "Feature flags configuration version ${var.config_version}"
   content_type             = "application/json"
   
-  content = var.config_content
+  content = jsonencode(jsondecode(var.config_content))
 }
 
 # Deploy Configuration

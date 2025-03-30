@@ -15,7 +15,7 @@ variable "config_file_name" {
 }
 
 variable "config_content" {
-  description = "JSON content of the configuration file"
+  description = "JSON content of the configuration file (compact format without whitespace)"
   type        = string
 }
 

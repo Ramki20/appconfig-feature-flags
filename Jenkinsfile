@@ -32,25 +32,41 @@ pipeline {
                     // Extract configuration file name without extension
                     env.CONFIG_FILE_NAME = params.CONFIG_FILE.replaceAll('\\.json$', '')
                     
-                    // Read the config file content
-                    env.CONFIG_CONTENT = sh(script: "cat ${CONFIG_DIR}/${params.CONFIG_FILE}", returnStdout: true).trim()
+                    // Make scripts executable
+                    sh 'chmod +x ./scripts/*.sh'
                     
-                    // Default to version 1
-                    env.CONFIG_VERSION = 1                    
+                    // Prepare the configuration file for Terraform
+                    sh "./scripts/prepare_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE} /tmp/prepared_config.json"
+                    
+                    // Read the prepared config file content
+                    env.CONFIG_CONTENT = sh(script: "cat /tmp/prepared_config.json", returnStdout: true).trim()
+                    
+                    // Extract version from the config file
+                    env.CONFIG_VERSION = sh(script: "jq -r '.version' ${CONFIG_DIR}/${params.CONFIG_FILE}", returnStdout: true).trim()
+                    
+                    echo "Configuration file: ${env.CONFIG_FILE_NAME}"
+                    echo "Environment (branch): ${env.BRANCH_NAME}"
+                    echo "Configuration version: ${env.CONFIG_VERSION}"
                 }
             }
         }
         
-       // stage('Validate Config') {
-       //     steps {
-       //         sh './scripts/validate_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE}'
-       //     }
-       // }
+        stage('Validate Config') {
+            steps {
+                script {
+                    // First make the script executable
+                    sh 'chmod +x ./scripts/validate_config.sh'
+                    
+                    // Then run it
+                    sh './scripts/validate_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE}'
+                }
+            }
+        }
         
         stage('Initialize Terraform') {
             steps {
                 dir('terraform') {
-                    sh 'terraform init'
+                    sh 'terraform init -reconfigure'
                 }
             }
         }
@@ -59,11 +75,11 @@ pipeline {
             steps {
                 dir('terraform') {
                     sh """
-                    terraform plan \
-                      -var="environment=${env.BRANCH_NAME}" \
-                      -var="config_file_name=${env.CONFIG_FILE_NAME}" \
-                      -var="config_content=${env.CONFIG_CONTENT}" \
-                      -var="config_version=${env.CONFIG_VERSION}" \
+                    terraform plan \\
+                      -var="environment=${env.BRANCH_NAME}" \\
+                      -var="config_file_name=${env.CONFIG_FILE_NAME}" \\
+                      -var="config_content=${env.CONFIG_CONTENT}" \\
+                      -var="config_version=${env.CONFIG_VERSION}" \\
                       -out=tfplan
                     """
                 }
@@ -102,12 +118,12 @@ pipeline {
                     // Wait and check deployment status
                     sh """
                     for i in {1..10}; do
-                        status=\$(aws appconfig get-deployment \
-                            --application-id ${applicationId} \
-                            --environment-id ${environmentId} \
-                            --deployment-number ${deploymentId} \
-                            --region ${AWS_DEFAULT_REGION} \
-                            --query "DeploymentState" \
+                        status=\$(aws appconfig get-deployment \\
+                            --application-id ${applicationId} \\
+                            --environment-id ${environmentId} \\
+                            --deployment-number ${deploymentId} \\
+                            --region ${AWS_DEFAULT_REGION} \\
+                            --query "DeploymentState" \\
                             --output text)
                         
                         echo "Deployment status: \$status"
