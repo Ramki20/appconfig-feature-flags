@@ -36,10 +36,10 @@ pipeline {
                     sh 'chmod +x ./scripts/*.sh'
                     
                     // Prepare the configuration file for Terraform
-                    sh "./scripts/prepare_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE} /tmp/prepared_config.json"
+                    //sh "./scripts/prepare_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE} /tmp/prepared_config.json"
                     
                     // Read the prepared config file content
-                    env.CONFIG_CONTENT = sh(script: "cat /tmp/prepared_config.json", returnStdout: true).trim()
+                    //env.CONFIG_CONTENT = sh(script: "cat /tmp/prepared_config.json", returnStdout: true).trim()
                     
                     // Extract version from the config file
                     //env.CONFIG_VERSION = sh(script: "jq -r '.version' ${CONFIG_DIR}/${params.CONFIG_FILE}", returnStdout: true).trim()
