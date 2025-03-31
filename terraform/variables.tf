@@ -23,3 +23,9 @@ variable "config_version" {
   description = "Version of the configuration"
   type        = string
 }
+
+variable "feature_flags_file_path" {
+  description = "Path to the feature flags JSON file"
+  type        = string
+  default     = "test_feature_flags.json"
+}
