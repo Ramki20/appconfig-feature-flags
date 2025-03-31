@@ -31,9 +31,6 @@ pipeline {
                     // Extract configuration file name without extension
                     env.CONFIG_FILE_NAME = params.CONFIG_FILE.replaceAll('\\.json$', '')
                     
-                    // Make scripts executable
-                    sh 'chmod +x ./scripts/*.sh'
-                    
                     env.CONFIG_VERSION = 1
                     
                     echo "Configuration file: ${env.CONFIG_FILE_NAME}"
