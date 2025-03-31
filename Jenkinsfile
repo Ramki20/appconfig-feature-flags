@@ -34,14 +34,6 @@ pipeline {
                     // Make scripts executable
                     sh 'chmod +x ./scripts/*.sh'
                     
-                    // Prepare the configuration file for Terraform
-                    //sh "./scripts/prepare_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE} /tmp/prepared_config.json"
-                    
-                    // Read the prepared config file content
-                    //env.CONFIG_CONTENT = sh(script: "cat /tmp/prepared_config.json", returnStdout: true).trim()
-                    
-                    // Extract version from the config file
-                    //env.CONFIG_VERSION = sh(script: "jq -r '.version' ${CONFIG_DIR}/${params.CONFIG_FILE}", returnStdout: true).trim()
                     env.CONFIG_VERSION = 1
                     
                     echo "Configuration file: ${env.CONFIG_FILE_NAME}"
@@ -50,18 +42,6 @@ pipeline {
                 }
             }
         }
-        
-        //stage('Validate Config') {
-        //    steps {
-        //        script {
-        //            // First make the script executable
-        //            sh 'chmod +x ./scripts/validate_config.sh'
-                    
-                    // Then run it
-        //            sh './scripts/validate_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE}'
-        //        }
-        //    }
-        // }
         
         stage('Initialize Terraform') {
             steps {
