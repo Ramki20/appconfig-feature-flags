@@ -26,8 +26,7 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    // Extract the branch name to use as environment name
-                    env.BRANCH_NAME = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
+                    env.BRANCH_NAME = dev
                     
                     // Extract configuration file name without extension
                     env.CONFIG_FILE_NAME = params.CONFIG_FILE.replaceAll('\\.json$', '')
