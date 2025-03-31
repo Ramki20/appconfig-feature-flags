@@ -42,7 +42,8 @@ pipeline {
                     env.CONFIG_CONTENT = sh(script: "cat /tmp/prepared_config.json", returnStdout: true).trim()
                     
                     // Extract version from the config file
-                    env.CONFIG_VERSION = sh(script: "jq -r '.version' ${CONFIG_DIR}/${params.CONFIG_FILE}", returnStdout: true).trim()
+                    //env.CONFIG_VERSION = sh(script: "jq -r '.version' ${CONFIG_DIR}/${params.CONFIG_FILE}", returnStdout: true).trim()
+                    env.CONFIG_VERSION = 1
                     
                     echo "Configuration file: ${env.CONFIG_FILE_NAME}"
                     echo "Environment (branch): ${env.BRANCH_NAME}"
