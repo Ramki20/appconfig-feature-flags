@@ -45,7 +45,7 @@ resource "aws_appconfig_deployment_strategy" "quick_deployment" {
   replicate_to                   = "NONE"
 }
 
- Hosted Configuration Version
+# Hosted Configuration Version
 resource "aws_appconfig_hosted_configuration_version" "feature_flags_version" {
   application_id           = aws_appconfig_application.feature_flags_app.id
   configuration_profile_id = aws_appconfig_configuration_profile.feature_flags_profile.configuration_profile_id
