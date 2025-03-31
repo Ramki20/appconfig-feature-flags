@@ -26,7 +26,7 @@ pipeline {
         stage('Setup') {
             steps {
                 script {
-                    env.BRANCH_NAME = dev
+                    env.BRANCH_NAME = 'dev'
                     
                     // Extract configuration file name without extension
                     env.CONFIG_FILE_NAME = params.CONFIG_FILE.replaceAll('\\.json$', '')
