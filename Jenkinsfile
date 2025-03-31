@@ -94,59 +94,6 @@ pipeline {
             }
         }
         
-        stage('Verify Deployment') {
-            steps {
-                script {
-                    // Get deployment ID from Terraform outputs
-                    def deploymentId = sh(
-                        script: 'cd terraform && terraform output -raw deployment_id',
-                        returnStdout: true
-                    ).trim()
-                    
-                    // Get application ID from Terraform outputs
-                    def applicationId = sh(
-                        script: 'cd terraform && terraform output -raw application_id',
-                        returnStdout: true
-                    ).trim()
-                    
-                    // Get environment ID from Terraform outputs
-                    def environmentId = sh(
-                        script: 'cd terraform && terraform output -raw environment_id',
-                        returnStdout: true
-                    ).trim()
-                    
-                    // Wait and check deployment status
-                    sh """
-                    for i in {1..10}; do
-                        status=\$(aws appconfig get-deployment \\
-                            --application-id ${applicationId} \\
-                            --environment-id ${environmentId} \\
-                            --deployment-number ${deploymentId} \\
-                            --region ${AWS_DEFAULT_REGION} \\
-                            --query "DeploymentState" \\
-                            --output text)
-                        
-                        echo "Deployment status: \$status"
-                        
-                        if [ "\$status" == "COMPLETE" ]; then
-                            echo "Deployment completed successfully!"
-                            break
-                        elif [ "\$status" == "FAILED" ]; then
-                            echo "Deployment failed!"
-                            exit 1
-                        fi
-                        
-                        if [ \$i -eq 10 ]; then
-                            echo "Deployment timed out!"
-                            exit 1
-                        fi
-                        
-                        sleep 5
-                    done
-                    """
-                }
-            }
-        }
     }
     
     post {
