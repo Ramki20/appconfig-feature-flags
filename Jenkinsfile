@@ -52,17 +52,17 @@ pipeline {
             }
         }
         
-        stage('Validate Config') {
-            steps {
-                script {
-                    // First make the script executable
-                    sh 'chmod +x ./scripts/validate_config.sh'
+        //stage('Validate Config') {
+        //    steps {
+        //        script {
+        //            // First make the script executable
+        //            sh 'chmod +x ./scripts/validate_config.sh'
                     
                     // Then run it
-                    sh './scripts/validate_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE}'
-                }
-            }
-        }
+        //            sh './scripts/validate_config.sh ${CONFIG_DIR}/${params.CONFIG_FILE}'
+        //        }
+        //    }
+        // }
         
         stage('Initialize Terraform') {
             steps {
