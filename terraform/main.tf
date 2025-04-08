@@ -53,6 +53,14 @@ resource "aws_appconfig_hosted_configuration_version" "feature_flags_version" {
   content_type             = "application/json"
   
   content = file("/var/jenkins_home/workspace/aws-appconfig-job/config/test_feature_flags.json")
+  
+  # Add lifecycle block to ignore changes to content
+  lifecycle {
+    ignore_changes = [
+      content
+    ]
+  }
+  
 }
 
 # Deploy Configuration
